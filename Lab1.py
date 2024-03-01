@@ -1,14 +1,13 @@
+#Вариант 10.
+#Натуральные числа. Выводить, меняя порядок цифр в них на обратный.
+#Для чисел, состоящих из одинаковых цифр вывод должен иметь вид – « 120 единиц».
 def reverse_number(n):
     return n[::-1]
-
 def is_uniform(n):
     return all(digit == n[0] for digit in n)
-
 def process_lexeme(lexeme):
-
     if not lexeme.isalnum():
         return
-
     if lexeme.isdigit():
         if is_uniform(lexeme):
             digit_word = {
@@ -28,11 +27,9 @@ def process_lexeme(lexeme):
         else:
             print(reverse_number(lexeme))
     else:
-
         if not any(char.isdigit() for char in lexeme):
             return
         print(lexeme)
-
 def read_and_process_file(filename):
     lexeme_buffer = ''
     with open(filename, 'r') as f:
@@ -40,15 +37,11 @@ def read_and_process_file(filename):
             block = f.read(1024)
             if not block:
                 break
-
             lexeme_buffer += block
             words = lexeme_buffer.split(' ')
             lexeme_buffer = words.pop()
-
             for word in words:
                 process_lexeme(word)
-
     if lexeme_buffer:
         process_lexeme(lexeme_buffer)
-
 read_and_process_file('inputs.txt')
