@@ -1,13 +1,12 @@
-#Вариант 10.
-#Натуральные числа. Выводить, меняя порядок цифр в них на обратный.
-#Для чисел, состоящих из одинаковых цифр вывод должен иметь вид – « 120 единиц».'''
+# Вариант 10.
+# Натуральные числа. Выводить, меняя порядок цифр в них на обратный.
+# Для чисел, состоящих из одинаковых цифр вывод должен иметь вид – « 120 единиц».'''
 
 def reverse_digits(number):
-
     return int(str(number)[::-1])
 
+
 def number_to_words(len_number, number):
-   
     words_dict = {
         '0': 'ноль',
         '1': 'единиц',
@@ -22,9 +21,9 @@ def number_to_words(len_number, number):
     }
     return words_dict.get(str(number), str(len_number))
 
+
 def process_sequence(sequence):
-  
-    lexemes = sequence.split() 
+    lexemes = sequence.split()
     for lexeme in lexemes:
         if lexeme.isdigit():
             num = int(lexeme)
@@ -35,6 +34,8 @@ def process_sequence(sequence):
                 print(reverse_digits(num))
         else:
             pass
+
+
 try:
     with open("input.txt", "r") as file:
         data = file.read()
