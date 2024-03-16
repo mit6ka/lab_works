@@ -38,11 +38,12 @@ def process_sequence(sequence):
 
 try:
     with open("input.txt", "r") as file:
-        data = file.read()
+        data = file.read(1024)
         if data:
             filtered_data = ''.join(filter(lambda x: x.isdigit() or x.isspace(), data))
             process_sequence(filtered_data)
         else:
             print('Файл пуст')
+        data = file.read(1024)
 except FileNotFoundError:
     print("Файл input.txt не найден.")
