@@ -1,0 +1,106 @@
+#10.	Формируется матрица F следующим образом: если в С количество минимальных чисел в нечетных столбцах в области 2 больше, чем количество максимальных чисел в четных строках в области 1,
+#то поменять в С симметрично области 1 и 2 местами, иначе С и Е поменять местами несимметрично. При этом матрица А не меняется. После чего вычисляется выражение: A*А+(K*AT). Выводятся по 
+#мере формирования А, F и все матричные операции последовательно.
+import random
+def matrix_creation(size):
+    return [[random.randint(-10, 10) for _ in range(size)] for _ in range(size)]
+
+
+def matrix_output(matrix):
+    for row in matrix:
+        print(' '.join(map(str, row)))
+    print()
+
+
+def matrix_split(matrix):
+    mid = len(matrix) // 2
+    return [row[:mid] for row in matrix[:mid]], [row[mid:] for row in matrix[:mid]], [row[:mid] for row in
+                                                                                      matrix[mid:]], [row[mid:] for row
+                                                                                                      in matrix[mid:]]
+
+
+def min_el_in_sec_ar(matrix):
+    n = len(matrix)
+    mid = n // 2
+    elem = []
+    for i in range(mid):
+        for j in range(i + 1, n - (i + 1)):
+            elem.append(matrix[i][j])
+    return elem.count(min(elem))
+
+
+def max_el_in_fr_ar(matrix):
+    n = len(matrix)
+    mid = n // 2
+    elem = []
+    for i in range(mid):
+        for j in range(i + 1, n - (i + 1)):
+            elem.append(matrix[j][i])
+    return elem.count(max(elem))
+
+
+def symmetrical_swap(matrix):
+    for i in range(mid):
+        for j in range(i + 1, n - (i + 1)):
+            matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+    return matrix
+
+
+def simple_swap(matrix1, matrix2):
+    matrix1, matrix2 = matrix2, matrix1
+    return matrix1, matrix2
+
+
+def matrix_transpose(matrix):
+    return [list(row) for row in zip(*matrix)]
+
+
+def multiply_matrix_by_scalar(matrix, scalar):
+    return [[scalar * cell for cell in row] for row in matrix]
+
+
+def matrix_multiplication(matrix1, matrix2):
+    result = [[0 for _ in range(len(matrix2[0]))] for _ in range(len(matrix1))]
+    for i in range(len(matrix1)):
+        for j in range(len(matrix2[0])):
+            for k in range(len(matrix2)):
+                result[i][j] += matrix1[i][k] * matrix2[k][j]
+    return result
+
+
+def sum_of_matrix(matrix1, matrix2):
+    matrix_res = [[0 for i in range(len(matrix1))] for j in range(len(matrix1))]
+    for i in range(len(matrix1)):
+        for j in range(len(matrix1)):
+            matrix_res[i][j] = matrix1[i][j] + matrix2[i][j]
+    return matrix_res
+
+
+def main():
+    K=int(input('K'))
+    n=int(input('N'))
+    A = matrix_creation(n)
+    matrix_output(A)
+    B, C, D, E = matrix_split(A)
+
+    if min_el_in_sec_ar(C) > max_el_in_fr_ar(C):
+        symmetrical_swap(C)
+    else:
+        simple_swap(C, E)
+
+    F = [B[i] + C[i] for i in range(n // 2)] + [D[i] + E[i] for i in range(n // 2)]
+
+    A_transposed = matrix_transpose(A)
+    A_transposedK = multiply_matrix_by_scalar(A_transposed, K)
+    AA = matrix_multiplication(A, A)
+    res = sum_of_matrix(AA, A_transposedK)
+
+    print('Результивирующая матрица')
+    matrix_output(res)
+
+    print('Матрица F')
+    matrix_output(F)
+
+
+if __name__ == "__main__":
+    main()
