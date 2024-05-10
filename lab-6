@@ -1,0 +1,72 @@
+import time
+
+# Алгоритмический подход
+def has_2_to_3_even_digits(number):
+    even_count = 0
+    while number > 0:
+        digit = number % 10
+        if digit % 2 == 0:
+            even_count += 1
+        number //= 10
+    return 2 <= even_count <= 3
+
+def is_prime(number):
+    if number <= 1:
+        return False
+    for i in range(2, int(number ** 0.5) + 1):
+        if number % i == 0:
+            return False
+    return True
+
+def find_numbers_algorithmic(n):
+    result = []
+    for number in range(1, n):
+        if has_2_to_3_even_digits(number):
+            result.append(number)
+    return result
+
+def find_numbers_algorithmic_complex(n):
+    result = []
+    for number in range(1, n):
+        if has_2_to_3_even_digits(number) and is_prime(number):
+            result.append(number)
+    return result
+
+# Функциональный подход
+def find_numbers_functional(n):
+    return [number for number in range(1, n) if 2 <= sum(1 for digit in str(number) if int(digit) % 2 == 0) <= 3]
+
+def find_numbers_functional_complex(n):
+    return [number for number in range(1, n) if has_2_to_3_even_digits(number) and is_prime(number)]
+
+# Измерение времени выполнения
+n = int(input("введите (n): "))
+
+start_time = time.time()
+algorithmic_result = find_numbers_algorithmic(n)
+algorithmic_time = time.time() - start_time
+
+start_time = time.time()
+functional_result = find_numbers_functional(n)
+functional_time = time.time() - start_time
+
+start_time = time.time()
+algorithmic_complex_result = find_numbers_algorithmic_complex(n)
+algorithmic_complex_time = time.time() - start_time
+
+start_time = time.time()
+functional_complex_result = find_numbers_functional_complex(n)
+functional_complex_time = time.time() - start_time
+
+# Вывод результатов 
+print(f"Алгоритмический подход: {algorithmic_result}")
+print(f"Время выполнения: {algorithmic_time} секунд\n")
+
+print(f"Функциональный подход: {functional_result}")
+print(f"Время выполнения: {functional_time} секунд\n")
+
+print(f"Сложный алгоритмический подход: {algorithmic_complex_result}")
+print(f"Время выполнения: {algorithmic_complex_time} секунд\n")
+
+print(f"Сложный функциональный подход: {functional_complex_result}")
+print(f"Время выполнения: {functional_complex_time} секунд\n")
