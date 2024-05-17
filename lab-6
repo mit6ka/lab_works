@@ -1,72 +1,54 @@
 import time
 
-# Алгоритмический подход
-def has_2_to_3_even_digits(number):
-    even_count = 0
-    while number > 0:
-        digit = number % 10
-        if digit % 2 == 0:
-            even_count += 1
-        number //= 10
-    return 2 <= even_count <= 3
-
-def is_prime(number):
-    if number <= 1:
-        return False
-    for i in range(2, int(number ** 0.5) + 1):
-        if number % i == 0:
-            return False
-    return True
-
-def find_numbers_algorithmic(n):
-    result = []
-    for number in range(1, n):
-        if has_2_to_3_even_digits(number):
-            result.append(number)
-    return result
-
-def find_numbers_algorithmic_complex(n):
-    result = []
-    for number in range(1, n):
-        if has_2_to_3_even_digits(number) and is_prime(number):
-            result.append(number)
-    return result
-
-# Функциональный подход
-def find_numbers_functional(n):
-    return [number for number in range(1, n) if 2 <= sum(1 for digit in str(number) if int(digit) % 2 == 0) <= 3]
-
-def find_numbers_functional_complex(n):
-    return [number for number in range(1, n) if has_2_to_3_even_digits(number) and is_prime(number)]
-
-# Измерение времени выполнения
+#1
+start = time.perf_counter()
 n = int(input("введите (n): "))
+print("Алгоритмический подход:\n")
+for i in range(1, n+1):
+    count = 0
+    for digit in str(i):
+        if int(digit) % 2 == 0:
+            count += 1
+    if 2 <= count <= 3:
+        print(i)
+end = time.perf_counter()
+execution_time = end - start
+print(f"\nВремя выполнения: {execution_time} секунд\n")
 
-start_time = time.time()
-algorithmic_result = find_numbers_algorithmic(n)
-algorithmic_time = time.time() - start_time
+start1 = time.perf_counter()
+print("-----------------------------------------------\n\nФункциональный подход:\n")
+for i in range(1, n+1):
+    num = sum(1 for digit in str(i) if int(digit) % 2 == 0)
+    if 2 <= num <= 3:
+        print(i)
+end1 = time.perf_counter()
+execution_time1 = end1 - start1
+print(f"\nВремя выполнения: {execution_time1} секунд")
+print(f"\n-----------------------------------------------\n\nРазница во времени: {execution_time1 - execution_time} сек")
 
-start_time = time.time()
-functional_result = find_numbers_functional(n)
-functional_time = time.time() - start_time
 
-start_time = time.time()
-algorithmic_complex_result = find_numbers_algorithmic_complex(n)
-algorithmic_complex_time = time.time() - start_time
 
-start_time = time.time()
-functional_complex_result = find_numbers_functional_complex(n)
-functional_complex_time = time.time() - start_time
+#2
+start2 = time.perf_counter()
+print("\n-----------------------------------------------\n\nУсложненный алгоритмический подход:\n")
+for i in range(1, n+1):
+    count = 0
+    for digit in str(i):
+        if int(digit) % 2 == 0:
+            count += 1
+    if 2 <= count <= 3 and '4' in str(i):
+        print(i)
+end2 = time.perf_counter()
+execution_time2 = end2 - start2
+print(f"\nВремя выполнения: {execution_time2} секунд\n")
 
-# Вывод результатов 
-print(f"Алгоритмический подход: {algorithmic_result}")
-print(f"Время выполнения: {algorithmic_time} секунд\n")
-
-print(f"Функциональный подход: {functional_result}")
-print(f"Время выполнения: {functional_time} секунд\n")
-
-print(f"Сложный алгоритмический подход: {algorithmic_complex_result}")
-print(f"Время выполнения: {algorithmic_complex_time} секунд\n")
-
-print(f"Сложный функциональный подход: {functional_complex_result}")
-print(f"Время выполнения: {functional_complex_time} секунд\n")
+start3 = time.perf_counter()
+print("-----------------------------------------------\n\nУсложненный функциональный подход:\n")
+for i in range(1, n+1):
+    num = sum(1 for digit in str(i) if int(digit) % 2 == 0)
+    if 2 <= num <= 3 and '4' in str(i):
+        print(i)
+end3 = time.perf_counter()
+execution_time3 = end3 - start3
+print(f"\nВремя выполнения: {execution_time1} секунд")
+print(f"\n-----------------------------------------------\n\nРазница во времени: {execution_time3 - execution_time2} сек")
