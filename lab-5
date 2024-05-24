@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import time
-
 # функция для вычисления факториала числа i
 def recursive_factorial(i):
     if i == 0:
@@ -15,7 +14,7 @@ def recursive_F(n):
         return 1
     else:
         sign *= -1
-        return sign * (recursive_F(n-1) + recursive_factorial(n+2) / (2 * recursive_factorial(n)))
+        return sign * (recursive_F(n-1) + recursive_factorial(n+2) / (recursive_factorial(2*n)))
 sign2 = 1
 # итерационный подход
 def iterative_F(n):
@@ -26,7 +25,7 @@ def iterative_F(n):
         sign2 *= -1
         f_prev = 1
         for i in range(2, n+1):
-            f_curr = sign2 * (f_prev + recursive_factorial(i+2) / (2 * recursive_factorial(i)))
+            f_curr = sign2 * (f_prev + recursive_factorial(i+2) / (2 * recursive_factorial(2*i)))
             f_prev = f_curr
         return f_curr
 
