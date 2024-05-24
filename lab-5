@@ -1,0 +1,59 @@
+import matplotlib.pyplot as plt
+import time
+
+# функция для вычисления факториала числа i
+def recursive_factorial(i):
+    if i == 0:
+        return 1
+    else:
+        return i * recursive_factorial(i-1)
+sign  = 1
+# рекурсивный подход
+def recursive_F(n):
+    global sign
+    if n == 1:
+        return 1
+    else:
+        sign *= -1
+        return sign * (recursive_F(n-1) + recursive_factorial(n+2) / (2 * recursive_factorial(n)))
+sign2 = 1
+# итерационный подход
+def iterative_F(n):
+    global sign2
+    if n == 1:
+        return 1
+    else:
+        sign2 *= -1
+        f_prev = 1
+        for i in range(2, n+1):
+            f_curr = sign2 * (f_prev + recursive_factorial(i+2) / (2 * recursive_factorial(i)))
+            f_prev = f_curr
+        return f_curr
+
+# сравнение времени выполнения
+print("| n | Recursive time | Iterative time |")
+print("|---|---------------|----------------|")
+n_values = list(range(1, 21))
+recursive_times = []
+iterative_times = []
+
+for n in n_values:
+    recursive_start_time = time.perf_counter()
+    recursive_F(n)
+    recursive_time = time.perf_counter() - recursive_start_time
+    recursive_times.append(recursive_time)
+
+    iterative_start_time = time.perf_counter()
+    iterative_F(n)
+    iterative_time = time.perf_counter() - iterative_start_time
+    iterative_times.append(iterative_time)
+
+    print("|", n, "|", round(recursive_time, 5), "|", round(iterative_time, 5), "|")
+
+# вывод графика
+plt.plot(n_values, recursive_times, label='Recursive time')
+plt.plot(n_values, iterative_times, label='Iterative time')
+plt.xlabel('n')
+plt.ylabel('Time (seconds)')
+plt.legend()
+plt.show()
