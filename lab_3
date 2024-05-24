@@ -1,5 +1,5 @@
-# 10.	Формируется матрица F следующим образом: если в С количество минимальных чисел в нечетных столбцах в области 2 больше, чем количество максимальных чисел в четных строках в области 1,
-# то поменять в С симметрично области 1 и 2 местами, иначе С и Е поменять местами несимметрично. При этом матрица А не меняется. После чего вычисляется выражение: A*А+(K*AT). Выводятся по 
+# 10.  Формируется матрица F следующим образом: если в С количество минимальных чисел в нечетных столбцах в области 2 больше, чем количество максимальных чисел в четных строках в области 1,
+# то поменять в С симметрично области 1 и 2 местами, иначе С и Е поменять местами несимметрично. При этом матрица А не меняется. После чего вычисляется выражение: A*А+(K*AT). Выводятся по
 # мере формирования А, F и все матричные операции последовательно.
 import random
 def matrix_creation(size):
@@ -26,8 +26,7 @@ def min_el_in_sec_ar(matrix):
     for i in range(mid):
         for j in range(i + 1, n - (i + 1)):
             elem.append(matrix[i][j])
-    return elem.count(min(elem))
-
+    return elem.count(min(elem)) if elem else 0  # Добавлена проверка на пустой список
 
 def max_el_in_fr_ar(matrix):
     n = len(matrix)
@@ -36,10 +35,12 @@ def max_el_in_fr_ar(matrix):
     for i in range(mid):
         for j in range(i + 1, n - (i + 1)):
             elem.append(matrix[j][i])
-    return elem.count(max(elem))
+    return elem.count(max(elem)) if elem else 0  # Добавлена проверка на пустой список
 
 
 def symmetrical_swap(matrix):
+    n = len(matrix)
+    mid = n // 2
     for i in range(mid):
         for j in range(i + 1, n - (i + 1)):
             matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
