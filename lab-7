@@ -1,0 +1,63 @@
+import time
+import tkinter as tk
+from tkinter import scrolledtext
+
+
+def run_program():
+    n = int(entry_n.get())
+
+    result_text = ""
+
+    # Усложненный алгоритмический подход
+    start2 = time.perf_counter()
+    result_text += "\n-----------------------------------------------\n\nУсложненный алгоритмический подход:\n"
+    for i in range(1, n, 3):
+        count = 0
+        for digit in str(i):
+            if int(digit) % 2 == 0:
+                count += 1
+        if 2 <= count <= 3:
+            result_text += f"{i}\n"
+    end2 = time.perf_counter()
+    execution_time2 = end2 - start2
+    result_text += f"\nВремя выполнения: {execution_time2} секунд\n"
+
+    # Усложненный функциональный подход
+    start3 = time.perf_counter()
+    result_text += "-----------------------------------------------\n\nУсложненный функциональный подход:\n"
+    for i in range(1, n, 3):
+        num = sum(1 for digit in str(i) if int(digit) % 2 == 0)
+        if 2 <= num <= 3:
+            result_text += f"{i}\n"
+    end3 = time.perf_counter()
+    execution_time3 = end3 - start3
+    result_text += f"\nВремя выполнения: {execution_time3} секунд\n"
+    result_text += f"\n-----------------------------------------------\n\nРазница во времени: {execution_time3 - execution_time2} сек\n"
+
+    text_result.delete(1.0, tk.END)
+    text_result.insert(tk.END, result_text)
+
+
+app = tk.Tk()
+app.title("Сравнение Алгоритмов")
+
+frame_input = tk.Frame(app)
+frame_input.pack(pady=10)
+
+tk.Label(frame_input, text="Введите n:").grid(row=0, column=0, padx=5, pady=5)
+entry_n = tk.Entry(frame_input)
+entry_n.grid(row=0, column=1, padx=5, pady=5)
+
+frame_buttons = tk.Frame(app)
+frame_buttons.pack(pady=10)
+
+tk.Button(frame_buttons, text="Запустить", command=run_program).grid(row=0, column=0, padx=5, pady=5)
+
+frame_result = tk.Frame(app)
+frame_result.pack(pady=10)
+
+tk.Label(frame_result, text="Результаты:").pack()
+text_result = scrolledtext.ScrolledText(frame_result, width=80, height=20)
+text_result.pack()
+
+app.mainloop()
