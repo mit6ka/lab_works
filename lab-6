@@ -6,6 +6,19 @@
 Вариант 10. Вывести все натуральные числа до n, в записи которых встречается от 2 до 3 четных цифр.
 """
 import time
+def generate_numbers_with_step(start, end, step):
+    return range(start, end, step)
+
+def count_even_digits(number):
+    return sum(1 for digit in str(number) if int(digit) % 2 == 0)
+"""
+целевая функция
+"""
+def find_numbers_with_even_digits(n, step=1):
+    for i in generate_numbers_with_step(1, n + 1, step):
+        count = count_even_digits(i)
+        if 2 <= count <= 3:
+            print(i)
 
 """
 Запуск таймера для измерения времени выполнения алгоритмического подхода.
@@ -22,7 +35,7 @@ n = int(input("Введите (n): "))
 Поиск чисел в диапазоне от 1 до n, в которых количество четных цифр от 2 до 3.
 """
 print("Алгоритмический подход:\n")
-for i in range(1, n+1):
+for i in range(1, n + 1):
     count = 0
     for digit in str(i):
         if int(digit) % 2 == 0:
@@ -47,7 +60,7 @@ start1 = time.perf_counter()
 Поиск чисел в диапазоне от 1 до n, в которых количество четных цифр от 2 до 3, используя генераторы списков.
 """
 print("-----------------------------------------------\n\nФункциональный подход:\n")
-for i in range(1, n+1):
+for i in range(1, n + 1):
     num = sum(1 for digit in str(i) if int(digit) % 2 == 0)
     if 2 <= num <= 3:
         print(i)
@@ -62,7 +75,8 @@ print(f"\nВремя выполнения: {execution_time1} секунд")
 """
 Вывод разницы во времени выполнения между алгоритмическим и функциональным подходами.
 """
-print(f"\n-----------------------------------------------\n\nРазница во времени: {execution_time1 - execution_time} сек")
+print(
+    f"\n-----------------------------------------------\n\nРазница во времени: {execution_time1 - execution_time} сек")
 
 """
 Усложненный алгоритмический подход
@@ -72,13 +86,9 @@ print(f"\n-----------------------------------------------\n\nРазница во
 """
 start2 = time.perf_counter()
 print("\n-----------------------------------------------\n\nУсложненный алгоритмический подход:\n")
-for i in range(1, n, 3):
-    count = 0
-    for digit in str(i):
-        if int(digit) % 2 == 0:
-            count += 1
-    if 2 <= count <= 3 :
-        print(i)
+start2 = time.perf_counter()
+print("\n-----------------------------------------------\n\nУсложненный алгоритмический подход:\n")
+find_numbers_with_even_digits(n, step=3)
 end2 = time.perf_counter()
 execution_time2 = end2 - start2
 print(f"\nВремя выполнения: {execution_time2} секунд\n")
@@ -88,19 +98,14 @@ print(f"\nВремя выполнения: {execution_time2} секунд\n")
 
 Используем генераторное выражение для подсчета четных цифр в числе.
     Суммируем единицы для каждой четной цифры, найденной в числе.
-    
+
 Проверяем, что количество четных цифр в числе от 2 до 3 с шагом 3.
     Если условие истинно, выводим число.
 """
 start3 = time.perf_counter()
 print("-----------------------------------------------\n\nУсложненный функциональный подход:\n")
-for i in range(1, n, 3):
-
-    num = sum(1 for digit in str(i) if int(digit) % 2 == 0)
-
-    if 2 <= num <= 3 :
-        print(i)
+find_numbers_with_even_digits(n, step=3)
 end3 = time.perf_counter()
 execution_time3 = end3 - start3
-print(f"\nВремя выполнения: {execution_time1} секунд")
+print(f"\nВремя выполнения: {execution_time3} секунд")
 print(f"\n-----------------------------------------------\n\nРазница во времени: {execution_time3 - execution_time2} сек")
