@@ -35,7 +35,7 @@ class EllipseApp:
         self.selected_ellipse = None
 
         tk.Button(master, text="Добавить эллипс", command=self.add_ellipse).pack()
-        tk.Button(master, text="Перемещение объекта", command=self.open_move_window).pack()
+        tk.Button(master, text="Управление объектами", command=self.open_move_window).pack()
         tk.Button(master, text="Сохранить", command=self.save_to_file).pack()
         tk.Button(master, text="Загрузить", command=self.load_from_file).pack()
 
