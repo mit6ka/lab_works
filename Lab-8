@@ -14,7 +14,7 @@ class Ellipse:
         self.app.selected_ellipse = self
         self.canvas.itemconfig("movable", outline="")
         self.canvas.itemconfig(self.oval, outline="red")
-        self.canvas.lift(self.oval)  # Bring the selected ellipse to front
+        self.canvas.lift(self.oval) 
 
     def move(self, dx, dy):
         self.canvas.move(self.oval, dx, dy)
@@ -23,7 +23,6 @@ class Ellipse:
         self.canvas.itemconfig(self.oval, fill=color)
 
     def rotate(self, angle):
-        # Placeholder for the rotate method
         pass
 
 class EllipseApp:
