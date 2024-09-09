@@ -1,0 +1,101 @@
+import tkinter as tk
+from tkinter import colorchooser, filedialog
+import json
+
+class Ellipse:
+    def __init__(self, canvas, app, x, y, width, height, fill='black'):
+        self.canvas = canvas
+        self.app = app  # Ссылка на экземпляр EllipseApp
+        self.oval = canvas.create_oval(x, y, x + width, y + height, fill=fill, tags="movable")
+        self.canvas.tag_bind(self.oval, '<Button-1>', self.select)
+
+    def select(self, event):
+        # Обновляем выбранный эллипс в EllipseApp
+        self.app.selected_ellipse = self
+        self.canvas.itemconfig("movable", outline="")
+        self.canvas.itemconfig(self.oval, outline="red")
+        self.canvas.lift(self.oval)  # Bring the selected ellipse to front
+
+    def move(self, dx, dy):
+        self.canvas.move(self.oval, dx, dy)
+
+    def change_color(self, color):
+        self.canvas.itemconfig(self.oval, fill=color)
+
+    def rotate(self, angle):
+        # Placeholder for the rotate method
+        pass
+
+class EllipseApp:
+    def __init__(self, master):
+        self.master = master
+        self.canvas = tk.Canvas(master, width=400, height=400)
+        self.canvas.pack()
+        self.ellipses = []
+        self.selected_ellipse = None
+
+        tk.Button(master, text="Добавить эллипс", command=self.add_ellipse).pack()
+        tk.Button(master, text="Перемещение объекта", command=self.open_move_window).pack()
+        tk.Button(master, text="Сохранить", command=self.save_to_file).pack()
+        tk.Button(master, text="Загрузить", command=self.load_from_file).pack()
+
+    def add_ellipse(self):
+        ellipse = Ellipse(self.canvas, self, 100, 100, 100, 50, 'blue')
+        self.ellipses.append(ellipse)
+        self.selected_ellipse = ellipse
+
+    def open_move_window(self):
+        if not self.selected_ellipse:
+            return
+
+        move_window = tk.Toplevel(self.master)
+        move_window.title("Управление объектом")
+
+        tk.Button(move_window, text="Влево", command=lambda: self.selected_ellipse.move(-10, 0)).pack(side=tk.LEFT)
+        tk.Button(move_window, text="Вправо", command=lambda: self.selected_ellipse.move(10, 0)).pack(side=tk.RIGHT)
+        tk.Button(move_window, text="Вверх", command=lambda: self.selected_ellipse.move(0, -10)).pack(side=tk.TOP)
+        tk.Button(move_window, text="Вниз", command=lambda: self.selected_ellipse.move(0, 10)).pack(side=tk.BOTTOM)
+        tk.Button(move_window, text="Изменить цвет", command=self.change_color).pack()
+
+    def change_color(self):
+        if not self.selected_ellipse:
+            return
+
+        color = colorchooser.askcolor()[1]
+        if color:
+            self.selected_ellipse.change_color(color)
+
+    def save_to_file(self):
+        data = [{
+            'coords': self.canvas.coords(ellipse.oval),
+            'fill': self.canvas.itemcget(ellipse.oval, 'fill')
+        } for ellipse in self.ellipses]
+
+        with filedialog.asksaveasfile(mode='w', defaultextension=".json") as file:
+            json.dump(data, file)
+
+    def load_from_file(self):
+        filepath = filedialog.askopenfilename(filetypes=[("JSON Files", "*.json")])
+        if not filepath:
+            return
+
+        with open(filepath, 'r') as file:
+            data = json.load(file)
+
+        self.ellipses.clear()
+        self.canvas.delete("movable")
+        for ellipse_data in data:
+            x1, y1, x2, y2 = ellipse_data['coords']
+            fill = ellipse_data['fill']
+            width = x2 - x1
+            height = y2 - y1
+            ellipse = Ellipse(self.canvas, self, x1, y1, width, height, fill=fill)
+            self.ellipses.append(ellipse)
+
+def main():
+    root = tk.Tk()
+    app = EllipseApp(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
