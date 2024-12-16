@@ -1,0 +1,151 @@
+import tkinter as tk
+from tkinter import messagebox
+
+
+class TicTacToe:
+    def __init__(self):
+        self.window = tk.Tk()
+        self.window.title("Крестики-нолики")
+        self.current_player = "X"
+        self.game_over = False
+        self.play_with_ai = False
+        self.board = [["" for _ in range(3)] for _ in range(3)]
+        self.buttons = [[None for _ in range(3)] for _ in range(3)]
+        self.initialize_ui()
+
+    def initialize_ui(self):
+        mode_frame = tk.Frame(self.window)
+        mode_frame.grid(row=0, column=0, columnspan=3)
+        tk.Button(mode_frame, text='Игрок против Игрока', command=self.player_vs_player).pack(side=tk.LEFT)
+        tk.Button(mode_frame, text='Игрок против ИИ', command=self.player_vs_ai).pack(side=tk.RIGHT)
+        self.initialize_board()
+        """Новый фрейм для выбора, кто сделает первый ход"""
+        self.first_move_frame = tk.Frame(self.window)
+        self.first_move_frame.grid(row=1, column=0, columnspan=3)
+        tk.Label(self.first_move_frame, text="Кто ходит первым:").pack(side=tk.LEFT)
+        tk.Button(self.first_move_frame, text='Игрок (X)', command=lambda: self.set_first_move('X')).pack(side=tk.LEFT)
+        tk.Button(self.first_move_frame, text='ИИ/Игрок 2 (O)', command=lambda: self.set_first_move('O')).pack(
+            side=tk.LEFT)
+
+        """ Скрыть фрейм до выбора режима игры """
+        self.first_move_frame.grid_remove()
+
+    def initialize_board(self):
+        for i in range(3):
+            for j in range(3):
+                self.buttons[i][j] = tk.Button(self.window, text="", font=('normal', 40), width=5, height=2,
+                                                command=lambda row=i, col=j: self.on_click(row, col))
+                self.buttons[i][j].grid(row=i+1, column=j)
+        reset_button = tk.Button(self.window, text='Рестарт', font=('normal', 20), command=self.reset_game)
+        reset_button.grid(row=4, column=0, columnspan=3)
+
+    """ Метод для установки первого хода """
+    def set_first_move(self, player):
+        self.current_player = player
+        self.first_move_frame.grid_remove()
+        if self.play_with_ai and self.current_player == "O":
+            self.ai_move()
+            """ Если играем с AI и AI ходит первым """
+
+    def player_vs_player(self):
+        self.play_with_ai = False
+        self.first_move_frame.grid()
+        """ Показать настройки первого хода """
+        self.reset_game()
+
+    def player_vs_ai(self):
+        self.play_with_ai = True
+        self.first_move_frame.grid()
+        """ Показать настройки первого хода """
+        self.reset_game()
+
+    def on_click(self, row, col):
+        if self.board[row][col] == "" and not self.game_over:
+            self.make_move(row, col, self.current_player)
+            if not self.game_over and self.play_with_ai and self.current_player == "O":
+                self.ai_move()
+
+    def make_move(self, row, col, player):
+        self.buttons[row][col]['text'] = player
+        self.board[row][col] = player
+        if self.check_win(player):
+            messagebox.showinfo("Победа", f"Игрок {player} выиграл!")
+            self.game_over = True
+        elif self.check_draw():
+            messagebox.showinfo("Ничья", "Игра закончилась вничью!")
+            self.game_over = True
+        else:
+            self.current_player = 'X' if self.current_player == 'O' else 'O'
+
+    def ai_move(self):
+        best_score = float('-inf')
+        best_move = None
+        for i in range(3):
+            for j in range(3):
+                if self.board[i][j] == "":
+                    self.board[i][j] = "O"
+                    score = self.minimax(0, False)
+                    self.board[i][j] = ""
+                    if score > best_score:
+                        best_score = score
+                        best_move = (i, j)
+        if best_move:
+            self.make_move(best_move[0], best_move[1], "O")
+
+    def minimax(self, depth, is_maximizing):
+        if self.check_win("O"):
+            return 1
+        elif self.check_win("X"):
+            return -1
+        elif self.check_draw():
+            return 0
+
+        if is_maximizing:
+            best_score = float('-inf')
+            for i in range(3):
+                for j in range(3):
+                    if self.board[i][j] == "":
+                        self.board[i][j] = "O"
+                        score = self.minimax(depth + 1, False)
+                        self.board[i][j] = ""
+                        best_score = max(score, best_score)
+            return best_score
+        else:
+            best_score = float('inf')
+            for i in range(3):
+                for j in range(3):
+                    if self.board[i][j] == "":
+                        self.board[i][j] = "X"
+                        score = self.minimax(depth + 1, True)
+                        self.board[i][j] = ""
+                        best_score = min(score, best_score)
+            return best_score
+
+    def check_win(self, player):
+        for i in range(3):
+            if all(self.board[i][j] == player for j in range(3)) or \
+               all(self.board[j][i] == player for j in range(3)):
+                return True
+        if (self.board[0][0] == self.board[1][1] == self.board[2][2] == player) or \
+           (self.board[0][2] == self.board[1][1] == self.board[2][0] == player):
+            return True
+        return False
+
+    def check_draw(self):
+        return all(self.board[i][j] != "" for i in range(3) for j in range(3))
+
+    def reset_game(self):
+        self.current_player = "X"
+        self.game_over = False
+        self.board = [["" for _ in range(3)] for _ in range(3)]
+        for i in range(3):
+            for j in range(3):
+                self.buttons[i][j]['text'] = ""
+
+    def start_game(self):
+        self.window.mainloop()
+
+""" Запуск игры """
+if __name__ == "__main__":
+    game = TicTacToe()
+    game.start_game()
